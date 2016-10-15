@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<project xmlns="antlib:org.apache.tools.ant" name="common" basedir=".">
+	<description>
+	    Common include for all plugins
+    </description>
+
+	<dirname file="${ant.file.common}" property="ant.file.common.basedir"/>
+
+	<import file="lib/bootstrap.xml" />
+
+	<import file="lib/sagcc.xml" />
+	<import file="lib/sagenv.xml" />
+	<import file="lib/sagtest.xml" />
+	<import file="lib/sagbuild.xml" />
+
+	<target name="all" depends="boot,up,test" description="End to end automation" />
+
+	
+</project>
