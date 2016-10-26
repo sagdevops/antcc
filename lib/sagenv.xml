@@ -1,9 +1,27 @@
-<project name="sagenv" xmlns="antlib:org.apache.tools.ant" xmlns:if="ant:if" xmlns:unless="ant:unless" basedir="." >
+<project name="sagenv" xmlns="antlib:org.apache.tools.ant" xmlns:if="ant:if" xmlns:unless="ant:unless" basedir="." default="help-sagenv" >
 	<description>
         Environment template based provisioning
     </description>
 
 	<import file="sagcc.xml" />
+
+	<target name="help-sagenv">
+		<echo>
+Optional parameter for any target:
+
+-Denv=other                      Environment configuration to use from
+                                 project defaults in 'environments/default/env.properties'
+                                 or custom 'environments/other/env.properties'
+Targets:
+
+ant up                           Import and apply all project 'templates/*'
+ant apply -Dalias=template       Apply template using its alias
+ant import -Dt=templateFolder    Reimport template from source folder by do not apply
+ant apply -Dt=templateFolder     Reimport and apply template from source folder
+ant migrate -Dt=templateFolder   Reimport and migrate using template from source folder
+		</echo>
+	</target>
+
 
 	<target name="sagenvInit" depends="sagccInit" >
 		<property id="sagenv.env" name="env" value="default" />
@@ -12,8 +30,8 @@
 	    <condition property="env.properties" value="environments/${env}/env.properties">
 	        <available file="environments/${env}/env.properties"/>
 	    </condition>
-	    <condition property="env.properties" value="${env}.properties">
-	        <available file="${env}.properties"/>
+	    <condition property="env.properties" value="environments/${env}.properties">
+	        <available file="environments/${env}.properties"/>
 	    </condition>
 	    <condition property="env.properties.exists" >
 	        <available file="${env.properties}"/>

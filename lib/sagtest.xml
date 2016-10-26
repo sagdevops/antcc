@@ -1,10 +1,22 @@
-<project name="sagtest" xmlns:au="antlib:org.apache.ant.antunit" basedir=".">
+<project name="sagtest" xmlns:au="antlib:org.apache.ant.antunit" basedir="." default="help-sagtest">
 	<description>
         PROTOTYPE: sagtest for AntUnit execution
     </description>
 
 	<import file="sagenv.xml" />
 	<dirname file="${ant.file.setup}" property="project.basedir" />
+
+	<target name="help-sagtest">
+		<echo>
+Optional parameter for any target:
+
+-Dsuite=some                     Run only tests from 'tests/some/*' folder
+
+Targets:
+
+ant test                         Run tests/test*.xml AntUnit tests
+		</echo>
+	</target>
 
 	<target name="sagtestInit" depends="sagenvInit">
 		<echo>In sagtest initialization ...</echo>

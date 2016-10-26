@@ -1,15 +1,23 @@
-<project name="sagbuild" xmlns:au="antlib:org.apache.ant.antunit" basedir="." >
+<project name="sagabe" xmlns:au="antlib:org.apache.ant.antunit" basedir="." default="help-sagabe">
 	<description>
-        PROTOTYPE: sagbuild for AssetBuildEnvironment execution
+        Asset Build Environment support
     </description>
 
 	<import file="sagenv.xml" />
 
-	<target name="sagbuildInit" depends="sagenvInit">
+	<target name="help-sagabe">
+		<echo>
+Targets:
+
+ant build                        Build assets from source
+		</echo>
+	</target>
+
+	<target name="sagabeInit" depends="sagenvInit">
 
 		<!-- find build.properties in the order of priority -->
 		<condition property="build.properties" value="environments/${env}/build.properties">
-			<available file="environments/${env}/env.properties"/>
+			<available file="environments/${env}/build.properties"/>
 		</condition>
 		<condition property="build.properties" value="assets/build.properties">
 			<available file="assets/build.properties"/>
@@ -21,7 +29,7 @@
 		<echo>Build configuration: ${build.properties}</echo>
 	</target>
 
-	<target name="build" depends="sagbuildInit" description="Build assets into build/assets repo">
+	<target name="build" depends="sagabeInit" description="Build assets into build/assets repo">
         <property file="${cc.properties}"/>
         <property file="${env.properties}"/>
         <property file="${build.properties}"/>

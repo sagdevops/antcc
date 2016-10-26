@@ -1,4 +1,4 @@
-<project name="sagcc" default="sagccInit" xmlns="antlib:org.apache.tools.ant" xmlns:if="ant:if" xmlns:unless="ant:unless" basedir="." >
+<project name="sagcc" default="help-sagcc" xmlns="antlib:org.apache.tools.ant" xmlns:if="ant:if" xmlns:unless="ant:unless" basedir="." >
 	<description>
         Core Command Central API client library and targets
     </description>
@@ -30,6 +30,24 @@
 	</condition>
 
 	<fail unless="cc.properties.exists" message="${cc}.properties file cannot be found in any supported locations." />
+
+	<target name="help-sagcc">
+		<echo>
+Optional parameter for any target:
+
+-Dcc=other                       Connection to Command Central server
+                                 using global settings in '~/.sag/cc.properties' 
+                                 or project defaults from 'clients/cc.properties'
+                                 or custom 'clients/other.properties'
+Targets:
+
+ant restartcc                    Restart local or remote Command Central server
+ant jobs                         List recent jogs
+ant killjobs                     Cancel active and remove completed jobs
+ant log                          Show tail of Command Central default log
+ant logs                         Show tail of agents default log
+		</echo>
+	</target>
 
 	<!-- call this target internally to initialize connection to CC using cc.properties -->
 	<target name="sagccInit" >
@@ -78,23 +96,19 @@
 		<cc command="list jobmanager jobs includeHeaders=false properties=id" format="csv" outputproperty="jobs" failonerror="false" />
 		<for list="${jobs}" param="job.id" delimiter="${line.separator}" keepgoing="true" trim="yes">
 			<sequential>
-				<cc command="delete jobmanager jobs @{job.id}" format="text/plain" />
+				<cc command="delete jobmanager jobs @{job.id}" format="csv"  />
 			</sequential>
 		</for>
-		<echo>Jobs list after canceling/deleing</echo>
-
-		<echo>Final list of jobs</echo>
-		<antcall target="jobs" />
 	</target>
 
-    <target name="logs" description="Tail Command Central and Agents default logs" depends="sagccInit" >
+    <target name="log" description="Command Central server default log" depends="sagccInit" >
     	<echo>
     		Command Central >>>
     	</echo>
-        <cc command="get diagnostics logs local OSGI-CCE default.log tail lines=20" format="text/plain" />
+        <cc command="get diagnostics logs local OSGI-CCE default.log tail lines=40" format="text/plain" />
     </target>
 
-	<target name="alllogs" depends="sagccInit">
+	<target name="logs" description="Agents default log" depends="sagccInit">
         <cc command="list landscape nodes includeHeaders=false properties=alias" format="csv" outputproperty="nodes" />
         <for list="${nodes}" param="node.alias" delimiter="${line.separator}" trim="true">
             <sequential>
@@ -104,10 +118,9 @@
                 <cc command="get diagnostics logs @{node.alias} OSGI-SPM default.log tail lines=20" format="text/plain" failonerror="false" />
             </sequential>
         </for>
-    	
     </target>
 	
-    <target name="ps" description="List process instances" depends="sagccInit" >
+    <target name="ps" description="List runtime instances" depends="sagccInit" >
         <cc command="list inventory components runtimeComponentCategory=PROCESS properties=runtimeComponent.displayName,nodeAlias" format="tsv" />
     </target>	
 

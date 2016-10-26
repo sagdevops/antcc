@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="bootstrap" default="boot" basedir=".">
+<project name="bootstrap" default="help-bootstrap" basedir=".">
 	<description>
       	Command Central bootstrap installer wrapper
 	</description>
+
+	<target name="help-bootstrap">
+		<echo>
+Optional parameter for any target:		
+
+-Dbootstrap=other                Bootstrap local Command Central server 
+                                 using defaults from 'bootstrap/default.properties'
+                                 or custom 'bootstrap/other.properties'
+Targets:
+
+ant upgrade                      Upgrade local Command Central server
+ant client                       Bootstrap local CC CLI (client)
+ant agent                        Bootstrap local SPM (agent)
+ant startcc                      Start local Command Central server
+ant stopcc                       Stop local Command Central server
+		</echo>
+	</target>
 
 	<condition property="is.linux" value="true">
 		<os family="unix" />
