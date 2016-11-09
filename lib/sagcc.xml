@@ -25,12 +25,6 @@
 		<available file="${user.home}/.sag/${cc}.properties"/>
 	</condition>
 		
-	<condition property="cc.properties.exists" >
-		<available file="${cc.properties}"/>
-	</condition>
-
-	<fail unless="cc.properties.exists" message="${cc}.properties file cannot be found in any supported locations." />
-
 	<target name="help-sagcc">
 		<echo>
 Optional parameter for any target:
@@ -51,6 +45,12 @@ ant logs                         Show tail of agents default log
 
 	<!-- call this target internally to initialize connection to CC using cc.properties -->
 	<target name="sagccInit" >
+		<condition property="cc.properties.exists" >
+			<available file="${cc.properties}"/>
+		</condition>
+
+		<fail unless="cc.properties.exists" message="${cc}.properties file cannot be found in any supported locations." />
+
 		<property file="${cc.properties}" />
 
 		<condition property="cc.cli.home" value="${env.CC_CLI_HOME}" >
