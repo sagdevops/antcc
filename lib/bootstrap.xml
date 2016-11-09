@@ -112,6 +112,10 @@ ant stopcc                       Stop local Command Central server
 			<arg line="${extra.args}" />
 		</exec>
 		
+        <echo file="${user.home}/.sag/cc.properties" append="true"># Added by bootstrap.xml
+cc.cli.home=${install.dir}/CommandCentral/client
+		</echo>
+
 		<echo>Finished installing.</echo>
 	</target>
 
