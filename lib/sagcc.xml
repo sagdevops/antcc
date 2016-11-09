@@ -44,7 +44,8 @@ ant logs                         Show tail of agents default log
 	</target>
 
 	<!-- call this target internally to initialize connection to CC using cc.properties -->
-	<target name="sagccInit" >
+	<target name="sagccInit">
+	
 		<condition property="cc.properties.exists" >
 			<available file="${cc.properties}"/>
 		</condition>
