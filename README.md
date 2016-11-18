@@ -24,6 +24,14 @@ More help:
 ant -f main.xml -S
 ```
 
+## Quick Test
+
+```bash
+ant -f main.xml -Dinstaller.url=http://aquarius-bg.eur.ad.sag/PDShare/cc -Dinstall.dir=./build/cc/cli client
+```
+
+For CI see [Jenkinsfile](Jenkinsfile)
+
 # Project Structure and Default Targets
 
 Complete project structure looks like this:
@@ -270,3 +278,99 @@ ant test                         Run tests/test*.xml AntUnit tests
 # Other Links
 
 See Command Central Template SDK
+
+
+# Enable your project for automation
+
+Create the project folder or cd into existing project
+
+```bash
+mkdir ~/myproj1
+cd ~/myproj1
+```
+
+Initialze git repository (if not done yet) and add antcc submodule
+
+```bash
+git init
+git submodule add http://irepo.eur.ad.sag/scm/cc/antcc.git antcc
+```
+
+Create build.xml in the root of the project: 
+
+```xml
+<?xml version="1.0"?>
+<project>
+	<import file="antcc/main.xml" />
+</project>
+```
+
+If the project is already Ant-enabled add this to the existing build.xml
+
+```xml
+<import file="antcc/main.xml" />
+```
+
+Create bootstrap configuration file, customize as needed
+
+```bash
+mkdir -p bootstrap
+
+cat <<EOF > bootstrap/default.properties
+accept.license=true
+installer.url=http://aquarius-dae.eur.ad.sag/PDShare/cc
+installer=cc-def-10.0-milestone-\${platform}
+install.dir=\${user.home}/sag/cc
+cce.http.port=8090
+cce.https.port=8091
+spm.http.port=8092
+spm.https.port=8093
+EOF
+```
+
+Run bootstrap process
+
+```bash
+ant boot
+```
+
+```bash
+mkdir -p clients/default client
+#cat <<EOF > clients/default/cc.properties
+cat <<EOF > client/cc.properties
+server=http://localhost:8090
+username=Administrator
+password=manage
+cc.cli.home=\${user.home}/sag/cc/CommandCentral/client
+EOF
+```
+
+Verify connection
+
+```bash
+ant jobs
+```
+
+Create basic template and default environment configuration
+
+```bash
+mkdir templates/default environments/default
+
+cat <<EOF > templates/default/template.yaml
+alias: default
+environments:
+  default:
+    foo: bar
+EOF
+
+cat <<EOF > environments/default/env.properties
+foo=baz
+EOF
+```
+
+Apply template 
+
+```bash
+ant up
+```
+

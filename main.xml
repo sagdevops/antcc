@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<project xmlns="antlib:org.apache.tools.ant" name="common" basedir="." default="help" >
+<project xmlns="antlib:org.apache.tools.ant" name="antcc" basedir="." default="help" >
 	<description>
 	    Common include for all plugins
     </description>
 
-	<dirname file="${ant.file.common}" property="ant.file.common.basedir"/>
+	<dirname file="${ant.file.antcc}" property="ant.file.antcc.basedir"/>
 
 	<import file="lib/bootstrap.xml" />
 
